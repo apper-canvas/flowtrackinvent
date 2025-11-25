@@ -73,7 +73,7 @@ export const taskService = {
     }
   },
 
-  async create(taskData) {
+async create(taskData) {
     try {
       const apperClient = getApperClient();
       if (!apperClient) {

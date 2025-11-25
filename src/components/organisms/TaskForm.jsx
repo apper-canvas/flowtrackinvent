@@ -1,4 +1,6 @@
 import { useState } from "react"
+import ApperFileFieldComponent from "@/components/atoms/FileUploader/ApperFileFieldComponent"
+import { fileService } from "@/services/api/fileService"
 import { motion } from "framer-motion"
 import Button from "@/components/atoms/Button"
 import Input from "@/components/atoms/Input"
@@ -7,11 +9,12 @@ import Textarea from "@/components/atoms/Textarea"
 import ApperIcon from "@/components/ApperIcon"
 
 const TaskForm = ({ onAddTask }) => {
-  const [title, setTitle] = useState("")
+const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [priority, setPriority] = useState("medium")
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState([])
 
   const validateForm = () => {
     const newErrors = {}
@@ -34,18 +37,45 @@ const TaskForm = ({ onAddTask }) => {
     setIsSubmitting(true)
     
     try {
-await onAddTask({
+// Create the task first
+      const createdTask = await onAddTask({
         title_c: title.trim(),
         description_c: description.trim(),
         priority_c: priority,
         status_c: "active"
       })
-      
-      // Reset form
+
+      // If task was created successfully and there are files, upload them
+      if (createdTask && createdTask.Id) {
+        try {
+          // Get files from the file uploader component
+          const { ApperFileUploader } = window.ApperSDK;
+          const files = await ApperFileUploader.FileField.getFiles('task_files');
+          
+          if (files && files.length > 0) {
+            await fileService.create(createdTask.Id, files);
+          }
+        } catch (fileError) {
+          console.error("Error uploading files:", fileError);
+          // Task was created successfully, but files failed - still show success for task
+        }
+      }
+
+      // Clear form
       setTitle("")
       setDescription("")
       setPriority("medium")
       setErrors({})
+      setUploadedFiles([])
+      
+      // Clear file uploader
+      if (window.ApperSDK?.ApperFileUploader) {
+        try {
+          await window.ApperSDK.ApperFileUploader.FileField.clearField('task_files');
+        } catch (clearError) {
+          console.error("Error clearing file field:", clearError);
+        }
+      }
     } catch (error) {
       console.error("Error adding task:", error)
     } finally {
@@ -144,7 +174,20 @@ await onAddTask({
                 />
               </div>
             </div>
-          </div>
+</div>
+
+          <ApperFileFieldComponent
+            elementId="task_files"
+            config={{
+              fieldKey: 'task_files',
+              fieldName: 'file_data_c',
+              tableName: 'files_c',
+              apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+              apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY,
+              existingFiles: uploadedFiles,
+              fileCount: uploadedFiles.length
+            }}
+          />
 
           <div className="flex justify-end pt-4">
             <Button
