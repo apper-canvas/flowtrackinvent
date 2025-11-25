@@ -51,7 +51,7 @@ const [title, setTitle] = useState("")
           // Get files from the file uploader component
           const { ApperFileUploader } = window.ApperSDK;
           const files = await ApperFileUploader.FileField.getFiles('task_files');
-          
+          console.log("files:", files)
           if (files && files.length > 0) {
             await fileService.create(createdTask.Id, files);
           }
