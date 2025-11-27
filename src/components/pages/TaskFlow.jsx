@@ -43,6 +43,7 @@ const TaskFlow = () => {
       setTasks(prev => [newTask, ...prev])
       toast.success("Task added successfully!")
       console.log('newTask::', newTask)
+      return newTask;
     } catch (err) {
       toast.error("Failed to add task")
       console.error("Error adding task:", err)
