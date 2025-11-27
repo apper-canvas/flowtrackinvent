@@ -59,19 +59,23 @@ export const fileService = {
       }
 
       // Convert files to API format
-      const { ApperFileUploader } = window.ApperSDK;
-      const convertedFiles = ApperFileUploader.toCreateFormat(filesData);
-
-      const records = filesData.map((file, index) => ({
-        Name: file.Name || file.name || `File ${index + 1}`,
-        task_c: parseInt(taskId),
-        file_data_c: convertedFiles,
-        file_name_c: file.Name || file.name,
-        file_size_c: Math.round((file.Size || file.size || 0) / 1024), // Convert to KB
-        file_type_c: file.Type || file.type || 'application/octet-stream',
-        upload_date_c: new Date().toISOString(),
-        description_c: file.description || ''
-      }));
+const { ApperFileUploader } = window.ApperSDK;
+      
+      const records = filesData.map((file, index) => {
+        // Convert individual file to create format
+        const convertedFile = ApperFileUploader.toCreateFormat([file]);
+        
+        return {
+          Name: file.Name || file.name || `File ${index + 1}`,
+          task_c: parseInt(taskId),
+          file_data_c: convertedFile,
+          file_name_c: file.Name || file.name,
+          file_size_c: Math.round((file.Size || file.size || 0) / 1024), // Convert to KB
+          file_type_c: file.Type || file.type || 'application/octet-stream',
+          upload_date_c: new Date().toISOString(),
+          description_c: file.description || ''
+        };
+      });
 
       const params = { records };
 
