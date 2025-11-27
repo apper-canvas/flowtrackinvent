@@ -44,6 +44,7 @@ const [title, setTitle] = useState("")
         priority_c: priority,
         status_c: "active"
       })
+      console.log('createdTask:', createdTask)
 
       // If task was created successfully and there are files, upload them
       if (createdTask && createdTask.Id) {
