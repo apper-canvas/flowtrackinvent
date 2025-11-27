@@ -42,6 +42,7 @@ const TaskFlow = () => {
       const newTask = await taskService.create(taskData)
       setTasks(prev => [newTask, ...prev])
       toast.success("Task added successfully!")
+      console.log('newTask::', newTask)
     } catch (err) {
       toast.error("Failed to add task")
       console.error("Error adding task:", err)
