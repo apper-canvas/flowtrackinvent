@@ -131,9 +131,9 @@ await ApperFileUploader.FileField.mount(elementIdRef.current, {
   }
   
   return (
-    <div className="space-y-2">
+<div className="space-y-2">
       <label className="block text-sm font-medium text-slate-700">
-        Attach Files
+        Add Images
       </label>
       <div 
         id={`file-uploader-${elementId}`}
