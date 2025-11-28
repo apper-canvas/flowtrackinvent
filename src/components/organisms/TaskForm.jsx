@@ -177,16 +177,18 @@ const [title, setTitle] = useState("")
             </div>
 </div>
 
-          <ApperFileFieldComponent
-            elementId="task_files"
+<ApperFileFieldComponent
+            elementId="file_data_c"
             config={{
-              fieldKey: 'task_files',
+              fieldKey: 'file_data_c',
               fieldName: 'file_data_c',
               tableName: 'files_c',
               apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
               apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY,
               existingFiles: uploadedFiles,
-              fileCount: uploadedFiles.length
+              fileCount: uploadedFiles.length,
+              supportedExtensions: 'jpg,jpeg,png,gif,bmp,webp,svg', // Focus on image formats
+              maxFileSize: 10485760 // 10MB limit for images
             }}
           />
 

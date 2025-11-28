@@ -1,4 +1,4 @@
-import { getApperClient } from '@/services/apperClient';
+import { getApperClient } from "@/services/apperClient";
 
 export const fileService = {
   // Get all files for a specific task
@@ -18,6 +18,7 @@ export const fileService = {
           {"field": {"Name": "file_data_c"}},
           {"field": {"Name": "description_c"}},
           {"field": {"Name": "upload_date_c"}},
+          {"field": {"Name": "task_c"}},
           {"field": {"Name": "CreatedOn"}}
         ],
         where: [{
@@ -58,8 +59,8 @@ export const fileService = {
         return [];
       }
 
-      // Convert files to API format
-const { ApperFileUploader } = window.ApperSDK;
+// Convert files to API format
+      const { ApperFileUploader } = window.ApperSDK;
       
       const records = filesData.map((file, index) => {
         // Convert individual file to create format
@@ -69,7 +70,7 @@ const { ApperFileUploader } = window.ApperSDK;
           Name: file.Name || file.name || `File ${index + 1}`,
           task_c: parseInt(taskId),
           file_data_c: convertedFile,
-          file_name_c: file.Name || file.name,
+          file_name_c: file.Name || file.name || 'untitled',
           file_size_c: Math.round((file.Size || file.size || 0) / 1024), // Convert to KB
           file_type_c: file.Type || file.type || 'application/octet-stream',
           upload_date_c: new Date().toISOString(),

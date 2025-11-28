@@ -43,9 +43,11 @@ const ApperFileFieldComponent = ({ elementId, config }) => {
         const { ApperFileUploader } = window.ApperSDK;
         elementIdRef.current = `file-uploader-${elementId}`;
         
-        await ApperFileUploader.FileField.mount(elementIdRef.current, {
+await ApperFileUploader.FileField.mount(elementIdRef.current, {
           ...config,
-          existingFiles: memoizedExistingFiles
+          existingFiles: memoizedExistingFiles,
+          acceptedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/webp', 'image/svg+xml'],
+          enablePreview: true // Enable image previews
         });
         
         if (mounted) {
@@ -76,7 +78,7 @@ const ApperFileFieldComponent = ({ elementId, config }) => {
         console.error('Error during unmount:', err);
       }
     };
-  }, [elementId, config.fieldKey, config.tableName, config.apperProjectId, config.apperPublicKey]);
+}, [elementId, config.fieldKey, config.tableName, config.apperProjectId, config.apperPublicKey, config.supportedExtensions]);
   
   // File Update Effect
   useEffect(() => {
